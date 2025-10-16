@@ -66,13 +66,13 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: 20-251-232-28.nip.io
+    - host: 51.107.218.79.nip.io
       paths:
         - path: /
           pathType: Prefix
   tls: 
     - hosts:
-        - 20-251-232-28.nip.io
+        - 51.107.218.79.nip.io
       secretName: node-app-tls
   
 

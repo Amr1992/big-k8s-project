@@ -1,3 +1,8 @@
+terraform {
+  backend "local" {
+    path = "./terraform.tfstate"
+  }
+}
 resource "azurerm_resource_group" "rg" {
   name     = "big-k8s-project-rg"
   location = "Norway East"
@@ -88,16 +93,49 @@ resource "azurerm_container_registry" "acr" {
 resource "azurerm_public_ip" "aks_ingress_ip" {
   name                = "aks-ingress-ip"
   location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = "MC_big-k8s-project-rg_aks-big-k8s_norwayeast"
   allocation_method   = "Static"
   sku                 = "Standard"
 }
+
 # Random suffix so name is unique globally
 resource "random_integer" "rand" {
   min = 10000
   max = 99999
 }
 
+data "azurerm_client_config" "current" {}
 
+resource "azurerm_key_vault" "kv" {
+  name                        = "bigk8skv"
+  location                    = azurerm_resource_group.rg.location
+  resource_group_name         = azurerm_resource_group.rg.name
+  sku_name                    = "standard"
+
+  # This is required
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
+
+  # Optional but good practice
+  soft_delete_retention_days  = 7
+  purge_protection_enabled    = false
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+
+    secret_permissions = [
+      "Get",
+      "List",
+      "Set",
+      "Delete"
+    ]
+  }
+}
+
+resource "azurerm_key_vault_secret" "db_password" {
+  name         = "db-password"
+  value        = "SuperSecret123!"
+  key_vault_id = azurerm_key_vault.kv.id
+}
 
 

@@ -30,6 +30,13 @@ jobs:
       - name: Login to Azure Container Registry
         run: az acr login --name ${{ secrets.ACR_NAME }}
 
+      - name: Get secret from Azure Key Vault
+        uses: Azure/get-keyvault-secrets@v1
+        with:
+          keyvault: big2025vault
+          secrets: 'acr-password'
+        id: getSecrets
+      
       - name: Build Docker image
         run: |
           IMAGE_TAG=v${{ github.run_number }}

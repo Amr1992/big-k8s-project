@@ -33,7 +33,7 @@ jobs:
       - name: Get secret from Azure Key Vault
         uses: Azure/get-keyvault-secrets@v1
         with:
-          keyvault: big2025vault
+          keyvault: bigk8skv
           secrets: 'acr-password'
         id: getSecrets
       

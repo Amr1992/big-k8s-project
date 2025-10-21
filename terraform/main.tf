@@ -46,6 +46,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     log_analytics_workspace_id = azurerm_log_analytics_workspace.aks_logs.id
   }
 
+
   
   # attach to the VNet
   network_profile {
@@ -130,7 +131,15 @@ resource "azurerm_key_vault" "kv" {
       "Delete"
     ]
   }
+  # 🔹 New access policy for AKS Managed Identity
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = "5cf3db36-9d94-4e28-89d3-ba34092eaebe" # AKS MI principalId
+    secret_permissions = ["Get", "List"]
+  }
 }
+
+
 
 resource "azurerm_key_vault_secret" "db_password" {
   name         = "db-password"
@@ -138,4 +147,36 @@ resource "azurerm_key_vault_secret" "db_password" {
   key_vault_id = azurerm_key_vault.kv.id
 }
 
+# SQL Server
+resource "azurerm_mssql_server" "sql_server" {
+  name                         = "big2025-sqlsrv"
+  resource_group_name           = azurerm_resource_group.rg.name
+  location                      = azurerm_resource_group.rg.location
+  version                       = "12.0"
+  administrator_login           = "sqladminuser"
+  administrator_login_password  = "ChangeThisPassword123!"
+  minimum_tls_version           = "1.2"
+}
 
+# SQL Database
+resource "azurerm_mssql_database" "sql_db" {
+  name           = "big2025db"
+  server_id      = azurerm_mssql_server.sql_server.id
+  sku_name       = "S0"
+  zone_redundant = false
+}
+
+  # Private Endpoint (connects SQL to VNet)
+resource "azurerm_private_endpoint" "sql_pe" {
+  name                = "big2025-sql-pe"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  subnet_id           = azurerm_subnet.aks_subnet.id
+
+  private_service_connection {
+    name                           = "sql-priv-conn"
+    private_connection_resource_id = azurerm_mssql_server.sql_server.id
+    is_manual_connection           = false
+    subresource_names              = ["sqlServer"]
+  }
+}

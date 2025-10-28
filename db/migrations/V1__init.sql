@@ -3,3 +3,4 @@ CREATE TABLE IF NOT EXISTS Users (
   Username NVARCHAR(100) NOT NULL,
   CreatedAt DATETIME2 DEFAULT SYSUTCDATETIME()
 );
+-- dummy change

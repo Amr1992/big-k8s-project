@@ -180,3 +180,4 @@ resource "azurerm_private_endpoint" "sql_pe" {
     subresource_names              = ["sqlServer"]
   }
 }
+#dummy push #

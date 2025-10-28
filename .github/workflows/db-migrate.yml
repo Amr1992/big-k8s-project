@@ -12,10 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run Flyway migrations
-        uses: flyway/flyway-action@v2
-        with:
-          url: jdbc:sqlserver://big2025-sqlsrv.database.windows.net:1433;databaseName=big2025db;encrypt=true;trustServerCertificate=false
-          user: sqladmin
-          password: ${{ secrets.SQL_ADMIN_PASSWORD }}
-          locations: filesystem:db/migrations
+      - name: Run Flyway migrations via Docker
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/db/migrations:/flyway/sql \
+            flyway/flyway:latest \
+            -url="jdbc:sqlserver://big2025-sqlsrv.database.windows.net:1433;databaseName=big2025db;encrypt=true;trustServerCertificate=false" \
+            -user=sqladmin \
+            -password="${{ secrets.SQL_ADMIN_PASSWORD }}" \
+            migrate

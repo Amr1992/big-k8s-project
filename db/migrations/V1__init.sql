@@ -4,3 +4,4 @@ CREATE TABLE IF NOT EXISTS Users (
   CreatedAt DATETIME2 DEFAULT SYSUTCDATETIME()
 );
 -- dummy change
+-- dummy change

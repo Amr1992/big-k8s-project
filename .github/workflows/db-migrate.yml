@@ -18,6 +18,6 @@ jobs:
             -v ${{ github.workspace }}/db/migrations:/flyway/sql \
             flyway/flyway:latest \
             -url="jdbc:sqlserver://big2025-sqlsrv.database.windows.net:1433;databaseName=big2025db;encrypt=true;trustServerCertificate=false" \
-            -user=sqladmin \
+            -user=sqladminuser \
             -password="${{ secrets.SQL_ADMIN_PASSWORD }}" \
             migrate

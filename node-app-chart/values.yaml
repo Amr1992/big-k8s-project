@@ -12,7 +12,12 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: v8
-
+env:
+  - name: SQL_CONNECTION_STRING
+    valueFrom:
+      secretKeyRef:
+        name: sql-conn-k8s
+        key: SQL_CONNECTION_STRING
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
 # This is to override the chart name.

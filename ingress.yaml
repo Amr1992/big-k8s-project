@@ -1,0 +1,42 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    argocd.argoproj.io/tracking-id: node-app:networking.k8s.io/Ingress:default/node-app-node-app-chart
+    cert-manager.io/cluster-issuer: letsencrypt-http01-staging
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"node-app:networking.k8s.io/Ingress:default/node-app-node-app-chart","cert-manager.io/cluster-issuer":"letsencrypt-http01-staging"},"labels":{"app.kubernetes.io/instance":"node-app","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"node-app-chart","app.kubernetes.io/version":"1.16.0","helm.sh/chart":"node-app-chart-0.1.0"},"name":"node-app-node-app-chart","namespace":"default"},"spec":{"ingressClassName":"nginx","rules":[{"host":"51.107.218.79.nip.io","http":{"paths":[{"backend":{"service":{"name":"node-app-node-app-chart","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}}],"tls":[{"hosts":["51.107.218.79.nip.io"],"secretName":"node-app-tls"}]}}
+    kubernetes.io/ingress.class: nginx
+  creationTimestamp: "2025-10-16T12:05:36Z"
+  generation: 2
+  labels:
+    app.kubernetes.io/instance: node-app
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-app-chart
+    app.kubernetes.io/version: 1.16.0
+    helm.sh/chart: node-app-chart-0.1.0
+  name: node-app-node-app-chart
+  namespace: default
+  resourceVersion: "919586"
+  uid: be1e6b17-f225-4c95-ab54-55387e057106
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: 51.107.218.79.nip.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: node-app-node-app-chart
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - 51.107.218.79.nip.io
+    secretName: node-app-tls
+status:
+  loadBalancer:
+    ingress:
+    - ip: 51.107.218.79

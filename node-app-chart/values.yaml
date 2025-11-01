@@ -11,7 +11,7 @@ image:
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: v12
+  tag: v13
 env:
   - name: SQL_CONNECTION_STRING
     valueFrom:

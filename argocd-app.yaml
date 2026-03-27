@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: appslb
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Amr1992/big-k8s-project.git
+    targetRevision: HEAD
+    path: node-app-chart
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
